@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="de" data-acryl="ocean">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#07080c">
+<title>Convertline – Changelog</title>
+<link rel="icon" href="/app-icons/convert-192.png">
+<!-- Absichtlich ohne fremde Server: nur Systemschriften -->
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #07080c; --surface: rgb(255 255 255 / .04); --line: rgb(255 255 255 / .1);
+    --text: #f1f3f8; --muted: #b3bbcb; --faint: #939cb0; --grid: rgb(255 255 255 / .085);
+    --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--bg); }
+  body { margin: 0; min-height: 100vh; position: relative; isolation: isolate; background: var(--bg); color: var(--text); font: 16px/1.6 var(--font); -webkit-font-smoothing: antialiased; }
+  .bg { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+  .bg::before {
+    content: ""; position: absolute; inset: 0;
+    background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 44px 44px; background-position: center top;
+    -webkit-mask-image: radial-gradient(ellipse 85% 60% at 50% 0%, #000 35%, transparent 80%);
+            mask-image: radial-gradient(ellipse 85% 60% at 50% 0%, #000 35%, transparent 80%);
+  }
+  .blob { position: absolute; width: 46vmax; height: 46vmax; border-radius: 50%; filter: blur(80px); opacity: .2; }
+  .blob.a { background: #0ea5e9; top: -26vmax; left: -12vmax; }
+  .blob.b { background: #8b5cf6; top: -22vmax; right: -16vmax; }
+  main { max-width: 760px; margin: 0 auto; padding: 22px 20px 60px; }
+  header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .back { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--text); text-decoration: none; font-weight: 650; }
+  .back svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+  :focus-visible { outline: 3px solid #fdba74; outline-offset: 3px; }
+  h1 { margin: 44px 0 6px; font-size: clamp(2.2rem, 7vw, 3.2rem); letter-spacing: -.03em; line-height: 1.05; }
+  h1 span { background: linear-gradient(100deg, #f9a8d4, #ec4899 45%, #8b5cf6); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .lead { margin: 0 0 34px; color: var(--muted); }
+  .update { position: relative; padding: 0 0 34px 28px; border-left: 2px solid var(--line); margin-left: 8px; }
+  .update::before { content: ""; position: absolute; left: -8px; top: 6px; width: 14px; height: 14px; border-radius: 50%; background: #0ea5e9; box-shadow: 0 0 0 4px rgb(245 165 36 / .2); }
+  .update.new::before { background: #7dd3fc; box-shadow: 0 0 0 4px rgb(255 194 75 / .25), 0 0 18px #7dd3fc; }
+  .date { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 0 0 4px; font-size: .82rem; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); }
+  .badge { padding: 2px 9px; border-radius: 999px; background: rgb(245 165 36 / .15); color: #fdba74; font-size: .72rem; letter-spacing: .06em; }
+  h2 { margin: 0 0 14px; font-size: 1.35rem; letter-spacing: -.01em; }
+  .card { padding: 16px 18px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); margin-bottom: 12px; }
+  .card h3 { display: flex; align-items: center; gap: 8px; margin: 0 0 8px; font-size: .95rem; }
+  .card h3 i { width: 10px; height: 10px; border-radius: 3px; background: var(--c, #6f9bff); }
+  ul { margin: 0; padding-left: 20px; color: var(--muted); }
+  li { margin: 4px 0; }
+  li b { color: var(--text); font-weight: 650; }
+  footer { margin-top: 20px; color: var(--faint); font-size: .88rem; text-align: center; }
+</style>
+<link rel="stylesheet" href="/app-icons/acryl.css">
+<link rel="stylesheet" href="/app-icons/mobile.css">
+</head>
+<body>
+<div class="bg" aria-hidden="true"><div class="blob a"></div><div class="blob b"></div></div>
+<main>
+  <header>
+    <a class="back" href="/convert/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>Convertline</a>
+  </header>
+  <h1><span>Convertline</span> – Changelog</h1>
+  <p class="lead">Was es Neues bei Convertline gibt – das Neueste steht oben.</p>
+
+  <section class="update new">
+    <p class="date">4. November 2026 <span class="badge">Neu</span></p>
+    <h2>Version 1.0.1 – macOS Monterey</h2>
+    <div class="card" style="--c:#0ea5e9">
+      <h3><i></i>macOS</h3>
+      <ul>
+        <li><b>Läuft wieder ab macOS 12 Monterey</b> (vorher erst ab macOS 13).</li>
+        <li><b>Die Mac-App ist jetzt signiert</b> (ad hoc), dadurch meldet macOS sie nicht mehr als „beschädigt“. Beim ersten Start einmal Rechtsklick → Öffnen.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="update">
+    <p class="date">3. November 2026</p>
+    <h2>Version 1.0.0 – Das erste Release</h2>
+    <div class="card" style="--c:#0ea5e9">
+      <h3><i></i>Umwandeln</h3>
+      <ul>
+        <li><b>Video:</b> MP4, WebM, MKV, MOV, AVI und GIF mit H.264, H.265, AV1 oder VP9. Passt schon alles, wird nur umverpackt und ist in Sekunden fertig.</li>
+        <li><b>Zielgröße:</b> Größe in MB angeben, das Video kommt in dieser Größe oder darunter raus.</li>
+        <li><b>Nur der Ton:</b> Videos zu MP3, M4A, FLAC, WAV, OGG oder Opus.</li>
+        <li><b>Musik:</b> Titel, Interpret und Cover bleiben, wenn das Format sie kann. Lautstärke lässt sich angleichen.</li>
+        <li><b>Bilder:</b> PNG, JPG, WebP, AVIF, BMP, TIFF, GIF, ICO und PDF, dazu HEIC und SVG als Quelle.</li>
+        <li><b>Dokumente:</b> Word, Markdown, HTML und Text zu PDF, HTML, Text oder Markdown, PDFs zu Bildern oder Text.</li>
+      </ul>
+    </div>
+    <div class="card" style="--c:#7dd3fc">
+      <h3><i></i>Bedienung</h3>
+      <ul>
+        <li><b>Gemischte Stapel:</b> Alles in eine Liste ziehen, je Art ein Ziel wählen, einzelne Dateien können ein eigenes bekommen.</li>
+        <li><b>Grafikkarte:</b> NVIDIA, AMD, Intel und Apple werden ausprobiert und genutzt, wenn sie laufen.</li>
+        <li><b>Originale bleiben sicher:</b> Sie werden nie verändert, ein Abbruch hinterlässt keine halben Dateien.</li>
+        <li><b>Rechtsklick:</b> Unter Windows „Mit Convertline umwandeln“ im Kontextmenü.</li>
+        <li><b>Zwölf Sprachen,</b> hell und dunkel, dazu der optionale Stil Acryl.</li>
+      </ul>
+    </div>
+  </section>
+
+
+  <footer>mert.win</footer>
+</main>
+</body>
+</html>

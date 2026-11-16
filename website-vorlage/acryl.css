@@ -1,0 +1,87 @@
+/* Acryl-Look für alle Seiten von mert.win (nicht Latein Trainer): rauchig verwischtes Bild dahinter, mattes Glas davor.
+   Bewusst ohne Korn: das wirkte wie schwarze Punkte.
+   Wird als letztes Stylesheet geladen und setzt die Variablen der Seiten neu, damit jede Seite ihren Aufbau behält.
+   Die Farben wählt <html data-acryl="ember|rose|moss|ocean|plum|slate">, data-acryl-auto folgt dem hellen Systemmodus. */
+:root {
+  --ac-img: url(/app-icons/acryl/slate.webp);
+  --ac-base: #242325; --ac-solid: #2d2b2f; --ac-glass: rgb(48 46 50 / .58); --ac-glass2: rgb(70 68 72 / .46);
+  --ac-line: rgb(255 255 255 / .09); --ac-line2: rgb(255 255 255 / .17);
+  --ac-text: #f3f1ed; --ac-muted: #c0bbb4; --ac-dim: #96918a;
+  --ac-shadow: 0 8px 24px rgb(0 0 0 / .26);
+  --ac-font: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", sans-serif;
+}
+html[data-acryl="ember"] { --ac-img: url(/app-icons/acryl/ember.webp); }
+html[data-acryl="rose"] { --ac-img: url(/app-icons/acryl/rose.webp); }
+html[data-acryl="moss"] { --ac-img: url(/app-icons/acryl/moss.webp); }
+html[data-acryl="ocean"] { --ac-img: url(/app-icons/acryl/ocean.webp); }
+html[data-acryl="plum"] { --ac-img: url(/app-icons/acryl/plum.webp); }
+html[data-theme="light"] {
+  --ac-img: url(/app-icons/acryl/paper.webp);
+  --ac-base: #ebe8e2; --ac-solid: #f8f6f2; --ac-glass: rgb(255 254 251 / .62); --ac-glass2: rgb(255 254 251 / .46);
+  --ac-line: rgb(35 30 20 / .1); --ac-line2: rgb(35 30 20 / .18);
+  --ac-text: #201e1a; --ac-muted: #5c574e; --ac-dim: #857f75; --ac-shadow: 0 8px 24px rgb(60 50 30 / .12);
+}
+@media (prefers-color-scheme: light) {
+  html[data-acryl-auto] {
+    --ac-img: url(/app-icons/acryl/paper.webp);
+    --ac-base: #ebe8e2; --ac-solid: #f8f6f2; --ac-glass: rgb(255 254 251 / .62); --ac-glass2: rgb(255 254 251 / .46);
+    --ac-line: rgb(35 30 20 / .1); --ac-line2: rgb(35 30 20 / .18);
+    --ac-text: #201e1a; --ac-muted: #5c574e; --ac-dim: #857f75; --ac-shadow: 0 8px 24px rgb(60 50 30 / .12);
+  }
+}
+
+/* Variablen aller Seiten-Familien */
+html:root, html[data-theme] {
+  --bg: var(--ac-base); --bg2: var(--ac-solid); --bg-elevated: var(--ac-solid); --bg-card: var(--ac-glass); --bg-card-hover: var(--ac-glass2);
+  --panel: var(--ac-glass); --panel2: var(--ac-glass2); --panel-2: var(--ac-glass); --panel-3: var(--ac-glass2);
+  --card: var(--ac-glass); --card-solid: var(--ac-solid); --card2: var(--ac-glass2);
+  --surface: var(--ac-glass); --surface-solid: var(--ac-solid);
+  --line: var(--ac-line); --line2: var(--ac-line2); --line-2: var(--ac-line2); --line-strong: var(--ac-line2); --border: var(--ac-line); --border-strong: var(--ac-line2);
+  --text: var(--ac-text); --muted: var(--ac-muted); --text-muted: var(--ac-muted); --faint: var(--ac-dim); --dim: var(--ac-dim); --text-faint: var(--ac-dim);
+  --shadow: var(--ac-shadow); --grid: transparent;
+  --sans: var(--ac-font); --font: var(--ac-font); --font-body: var(--ac-font);
+  --radius: 10px; --radius-lg: 12px; --r: 6px;
+  /* ein Akzent statt Verlauf */
+  --a2: var(--a1); --a3: var(--a1); --grad: linear-gradient(var(--a1), var(--a1));
+  --accent2: var(--accent); --accent-2: var(--accent); --accent-strong: var(--accent); --accent-glow: transparent; --violet: var(--accent);
+  --orb1: transparent; --orb2: transparent; --orb3: transparent; --blob-o: 0;
+}
+
+html, body { background: transparent !important; }
+html { background-color: var(--ac-base) !important; }
+/* Weichzeichner: glättet die Kompression des kleinen Bildes */
+html::before { content: ""; position: fixed; inset: -70px; z-index: -1; pointer-events: none; filter: blur(28px); transform: translateZ(0);
+  background: var(--ac-img) center / cover no-repeat, var(--ac-base); }
+body { font-family: var(--ac-font); }
+
+/* Raus: Leuchtflecken, Raster, Verlaufsschrift, schwebende Kärtchen */
+.aurora, .gridbg, .blob, .bg[aria-hidden="true"], .float { display: none !important; }
+.grad-text, .grad, h1 .grad, .ln, h1 span { background: none !important; -webkit-text-fill-color: currentColor; color: inherit !important; }
+.label { font: 600 13.5px/1 var(--ac-font); letter-spacing: 0; text-transform: none; }
+.label::before, .btn.pri::after, .gcard::before { display: none !important; }
+
+/* Ruhigere Schrift: keine Riesen-Überschriften */
+h1 { font-weight: 600; letter-spacing: -.015em; }
+h2 { font-weight: 600; letter-spacing: -.01em; }
+h3 { font-weight: 600; letter-spacing: 0; }
+.hero h1 { font-size: clamp(34px, 4.6vw, 56px); line-height: 1.08; }
+section > .wrap h2 { font-size: clamp(26px, 3.2vw, 38px); line-height: 1.15; }
+
+/* Glas: alles, was vorher eine Karte war */
+.card, .gcard, .panel, .stat, .badge, .pill, .chip, .btn, .seg, .tabs, .ib, .sel, .icon-btn, .search input, .cats button, .series, .more-games summary, .drop {
+  box-shadow: none; }
+.card, .gcard, .panel { border-radius: 10px; }
+.btn, .ib, .sel, .icon-btn, .tabs, .tabs button, .seg, .seg button, .search input, .cats button, .more-games summary { border-radius: 7px; }
+.badge, .pill, .chip, .app-btn { border-radius: 6px; }
+.badge b { border-radius: 4px; }
+.series, .drop, .hero:is(section) { border-radius: 12px; }
+.btn:hover, .gcard:hover, .card:hover { transform: none; }
+.btn.pri { box-shadow: none; font-weight: 600; }
+.editor { transform: none !important; box-shadow: var(--ac-shadow) !important; background: var(--ac-glass) !important; border-radius: 12px; }
+.editor img { border-radius: 8px; }
+
+/* Symbole auf /help und Co.: getöntes Glas statt glänzender Kachel */
+.ico { background: color-mix(in srgb, var(--c, #8d8f94) 34%, rgb(255 255 255 / .06)); box-shadow: inset 0 0 0 1px rgb(255 255 255 / .1); border-radius: 10px; }
+html[data-theme="light"] .ico { background: color-mix(in srgb, var(--c, #8d8f94) 24%, #fff); color: color-mix(in srgb, var(--c, #8d8f94) 68%, #1c1a16); box-shadow: inset 0 0 0 1px rgb(35 30 20 / .08); }
+.card:hover, .card:focus-visible { box-shadow: none; }
+.card::before { display: none; }
