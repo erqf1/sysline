@@ -1,8 +1,11 @@
 name: Release
 
+# Veröffentlicht nur bei einem Tag v*; bei Pull Requests nach main werden alle Pakete zur Probe gebaut.
 on:
   push:
     tags: ['v*']
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
