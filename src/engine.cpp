@@ -1,6 +1,7 @@
 #include "engine.h"
 
 #include <QFileInfo>
+#include <QLocale>
 #include <QRegularExpression>
 #include <QSet>
 #include <algorithm>
@@ -150,7 +151,7 @@ QString macroSummary(const Macro& m) {
     const QString mode = m.mode == Macro::Once ? L("once")
                          : m.mode == Macro::Repeat ? L("%1 times").arg(m.repeat)
                                                    : L("while held");
-    return L("%1 steps · %2 s · %3").arg(m.steps.size()).arg(QLocale().toString(total / 1000.0, 'f', 2), mode);
+    return L("%1 steps · %2 s · %3").arg(m.steps.size()).arg(QLocale(language() == "de" ? QLocale::German : QLocale::English).toString(total / 1000.0, 'f', 2), mode);
 }
 
 // ---------------------------------------------------------------- Profile

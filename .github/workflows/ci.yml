@@ -1,0 +1,90 @@
+name: CI
+
+# Baut Sysline auf Windows, Linux und macOS und lässt den Selbsttest unsichtbar laufen (QT_QPA_PLATFORM=offscreen).
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+env:
+  QT_VERSION: '6.8.3'
+  QT_QPA_PLATFORM: offscreen
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ env.QT_VERSION }}
+          arch: win64_msvc2022_64
+          cache: true
+      - uses: ilammy/msvc-dev-cmd@v1
+      - name: Build
+        shell: pwsh
+        run: |
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release "-DCMAKE_PREFIX_PATH=$env:QT_ROOT_DIR"
+          cmake --build build
+      - name: Selftest
+        shell: pwsh
+        run: |
+          $p = Start-Process -FilePath build/Sysline.exe -ArgumentList '--selftest','selftest' -Wait -PassThru -NoNewWindow
+          Get-Content selftest/selftest.txt
+          if ($p.ExitCode -ne 0) { exit 1 }
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: selftest-windows
+          path: selftest
+
+  linux:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qt6-base-dev libx11-dev libgl1-mesa-dev cmake ninja-build fonts-noto-core
+      - name: Build
+        run: |
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+          cmake --build build
+      - name: Selftest
+        run: |
+          set +e
+          build/sysline --selftest selftest
+          rc=$?
+          cat selftest/selftest.txt
+          exit $rc
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: selftest-linux
+          path: selftest
+
+  macos:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ env.QT_VERSION }}
+          cache: true
+      - name: Build
+        run: |
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release "-DCMAKE_PREFIX_PATH=$QT_ROOT_DIR" -DCMAKE_OSX_DEPLOYMENT_TARGET=12.0
+          cmake --build build --parallel
+      - name: Selftest
+        run: |
+          set +e
+          build/Sysline.app/Contents/MacOS/Sysline --selftest "$PWD/selftest"
+          rc=$?
+          cat selftest/selftest.txt
+          exit $rc
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: selftest-macos
+          path: selftest

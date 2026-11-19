@@ -81,3 +81,8 @@ private:
     Impl* d = nullptr;
     MacroPlayer();
 };
+
+// Website-Bilder: die Oberfläche so zeigen wie unter Windows (ohne "nur unter Windows"-Hinweise)
+extern bool g_demoUi;
+inline bool uiKeysSupported() { return g_demoUi || KeyHook::supported(); }
+inline bool uiHotkeySupported() { return g_demoUi || GlobalHotkey::supported(); }

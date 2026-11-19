@@ -16,7 +16,6 @@
     <key>NSPrincipalClass</key><string>NSApplication</string>
     <!-- Läuft in der Menüleiste, ohne Dock-Symbol -->
     <key>LSUIElement</key><true/>
-    <key>NSMicrophoneUsageDescription</key><string>Clipline can record your microphone together with your screen.</string>
-    <key>NSScreenCaptureUsageDescription</key><string>Clipline records your screen in the background so you can save the last moments as a clip.</string>
+    
 </dict>
 </plist>

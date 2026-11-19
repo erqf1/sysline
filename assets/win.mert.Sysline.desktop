@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Sysline
+GenericName=Game Overlay
+Comment=Game overlay with FPS, load, temperatures and ping, plus key remapping and macros
+Exec=sysline
+Icon=sysline
+Terminal=false
+Categories=Utility;Monitor;Game;
+Keywords=overlay;fps;gpu;temperature;ping;remap;macro;keys;

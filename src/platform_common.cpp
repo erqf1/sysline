@@ -12,6 +12,8 @@
 #include <thread>
 #include "platform.h"
 
+bool g_demoUi = false;
+
 QString appLogPath() {
     static const QString path = [] {
         QString dir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
