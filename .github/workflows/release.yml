@@ -1,0 +1,197 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  QT_VERSION: '6.8.3'
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ env.QT_VERSION }}
+          arch: win64_msvc2022_64
+          cache: true
+      - uses: ilammy/msvc-dev-cmd@v1
+      - name: Build
+        shell: pwsh
+        run: |
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release "-DCMAKE_PREFIX_PATH=$env:QT_ROOT_DIR"
+          cmake --build build
+      - name: Selftest
+        shell: pwsh
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: |
+          $p = Start-Process -FilePath build/Sysline.exe -ArgumentList '--selftest','selftest' -Wait -PassThru -NoNewWindow
+          Get-Content selftest/selftest.txt
+          if ($p.ExitCode -ne 0) { exit 1 }
+      - name: Package
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path dist/Sysline | Out-Null
+          windeployqt --no-translations --no-system-d3d-compiler --no-opengl-sw --dir dist/Sysline build/Sysline.exe
+          Copy-Item build/Sysline.exe dist/Sysline/
+          Copy-Item LICENSE, README.md dist/Sysline/
+          Compress-Archive -Path dist/Sysline -DestinationPath Sysline-windows-x64.zip
+      - name: Installer
+        shell: pwsh
+        run: |
+          choco install innosetup -y --no-progress
+          $ver = if ($env:GITHUB_REF_TYPE -eq 'tag') { $env:GITHUB_REF_NAME.TrimStart('v') } else { '0.0.0' }
+          & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" "/DMyAppVersion=$ver" packaging/windows/sysline.iss
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+          Move-Item dist/Sysline-windows-x64-setup.exe .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: |
+            Sysline-windows-x64.zip
+            Sysline-windows-x64-setup.exe
+
+  linux:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qt6-base-dev libx11-dev libgl1-mesa-dev cmake ninja-build dpkg-dev fonts-noto-core
+      - name: Build
+        run: |
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
+          cmake --build build
+          strip build/sysline
+      - name: Selftest
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: |
+          set +e
+          build/sysline --selftest selftest
+          rc=$?
+          cat selftest/selftest.txt
+          exit $rc
+      - name: Version
+        run: |
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then echo "VER=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"; else echo "VER=0.0.0" >> "$GITHUB_ENV"; fi
+      - name: deb package
+        run: |
+          DESTDIR="$PWD/pkg/deb" cmake --install build
+          mkdir -p pkg/deb/DEBIAN
+          {
+            echo "Package: sysline"
+            echo "Version: ${VER}"
+            echo "Section: utils"
+            echo "Priority: optional"
+            echo "Architecture: amd64"
+            echo "Depends: libqt6widgets6, libqt6network6, libx11-6, iputils-ping"
+            echo "Maintainer: W Software <noreply@users.noreply.github.com>"
+            echo "Description: Game overlay with FPS, load, temperatures and ping"
+            echo " Overlay with live system values, plus key remapping and macros (Windows)."
+          } > pkg/deb/DEBIAN/control
+          dpkg-deb --build --root-owner-group pkg/deb sysline_amd64.deb
+      - name: tar.gz package
+        run: |
+          D=sysline-linux-x86_64
+          mkdir "$D"
+          cp build/sysline "$D/sysline"
+          cp assets/icon.png assets/win.mert.Sysline.desktop packaging/linux/install.sh LICENSE README.md "$D/"
+          tar czf sysline-linux-x86_64.tar.gz "$D"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux
+          path: |
+            sysline_amd64.deb
+            sysline-linux-x86_64.tar.gz
+
+  arch:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    steps:
+      - name: Dependencies
+        run: pacman -Syu --noconfirm base-devel git cmake ninja qt6-base libx11 iputils
+      - uses: actions/checkout@v4
+      - name: makepkg
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then VER="${GITHUB_REF_NAME#v}"; else VER="0.0.0"; fi
+          useradd -m builder
+          mkdir /home/builder/pkg
+          tar czf /home/builder/pkg/sysline-src.tar.gz --exclude=.git --exclude=build --exclude=dist --exclude=website --exclude=website-vorlage .
+          cp packaging/arch/PKGBUILD /home/builder/pkg/
+          sed -i "s/^pkgver=.*/pkgver=${VER}/" /home/builder/pkg/PKGBUILD
+          chown -R builder /home/builder/pkg
+          cd /home/builder/pkg
+          su builder -c "makepkg -f --noconfirm"
+          cp sysline-[0-9]*-x86_64.pkg.tar.zst "$GITHUB_WORKSPACE/sysline-x86_64.pkg.tar.zst"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: arch
+          path: sysline-x86_64.pkg.tar.zst
+
+  macos:
+    strategy:
+      matrix:
+        include:
+          - os: macos-15-intel
+            name: intel
+          - os: macos-15
+            name: apple-silicon
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ env.QT_VERSION }}
+          cache: true
+      - name: Build
+        run: |
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release "-DCMAKE_PREFIX_PATH=$QT_ROOT_DIR" -DCMAKE_OSX_DEPLOYMENT_TARGET=12.0
+          cmake --build build --parallel
+      - name: Selftest
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: |
+          set +e
+          build/Sysline.app/Contents/MacOS/Sysline --selftest "$PWD/selftest"
+          rc=$?
+          cat selftest/selftest.txt
+          exit $rc
+      - name: Package
+        run: |
+          macdeployqt build/Sysline.app
+          codesign --force --deep -s - build/Sysline.app
+          mkdir dmg
+          cp -R build/Sysline.app dmg/
+          ln -s /Applications dmg/Applications
+          hdiutil create -volname Sysline -srcfolder dmg -ov -format UDZO "Sysline-macos-${{ matrix.name }}.dmg"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos-${{ matrix.name }}
+          path: Sysline-macos-${{ matrix.name }}.dmg
+
+  release:
+    if: ${{ always() && startsWith(github.ref, 'refs/tags/v') && needs.windows.result == 'success' && needs.linux.result == 'success' && needs.arch.result == 'success' && needs.macos.result == 'success' }}
+    needs: [windows, linux, arch, macos]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - uses: softprops/action-gh-release@v2
+        with:
+          name: Sysline ${{ github.ref_name }}
+          body_path: packaging/release-notes.md
+          files: dist/*
