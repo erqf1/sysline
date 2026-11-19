@@ -131,6 +131,7 @@ struct Adl::Impl {
     FnOd5Temp od5 = nullptr;
 };
 
+Adl::Adl() = default;
 Adl::~Adl() {
     if (d && d->ctx && d->destroy) d->destroy(d->ctx);
 }
@@ -203,6 +204,7 @@ GpuReading Adl::read() {
 }
 #else
 struct Adl::Impl {};
+Adl::Adl() = default;
 Adl::~Adl() = default;
 bool Adl::open() { return false; }
 GpuReading Adl::read() { return {}; }

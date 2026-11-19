@@ -12,6 +12,8 @@
 #include <QKeySequence>
 #include <QSettings>
 #include <atomic>
+#include <chrono>
+#include <functional>
 #include <mutex>
 #include <thread>
 #include <vector>

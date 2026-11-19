@@ -58,9 +58,9 @@ public:
     // Aufnahme: jede echte Taste (nicht von Sysline gesendet) mit Zeit in ms
     std::function<void(const RecordedKey&)> onRecord;
     void setRecording(bool on);
+    struct Impl;  // öffentlich, weil die Hook-Funktion von Windows (außerhalb der Klasse) darauf zugreift
 
 private:
-    struct Impl;
     Impl* d = nullptr;
 };
 

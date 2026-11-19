@@ -32,6 +32,7 @@ private:
 // AMD unter Windows: ADL (atiadlxx.dll, kommt mit dem Adrenalin-Treiber). Liest Temperatur (Rand + Hotspot) und Last.
 class Adl {
 public:
+    Adl();
     ~Adl();
     bool open();
     GpuReading read();
