@@ -539,7 +539,8 @@ static int selfTest(const QString& dir) {
         check(m.ramTotal > 0.2 && m.ramUsed > 0 && m.ramUsed <= m.ramTotal, "system: RAM read");
         check(m.cpu >= 0 && m.cpu <= 100, "system: CPU load read", QString::number(m.cpu));
         qint64 pid = 0;
-        say("info: foreground=" + foregroundProgram(&pid) + QString(" pid=%1").arg(pid));
+        const QString fg = foregroundProgram(&pid);
+        say("info: foreground=" + fg + QString(" pid=%1").arg(pid));
         say("info: cpu temp note: " + Sampler::cpuTempNote());
     }
 
