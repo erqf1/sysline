@@ -7,9 +7,9 @@ Status: TEILWEISE. Programm, Tests, CI, Pakete und Website sind fertig. Das Rele
 
 2. BRANCH, COMMITS, PR, CI
 - Branch: claude/admiring-carson-o5law6 (ab main 96f33cf)
-- Letzter Code-Commit: f4361ab (davor 7af40bb, 6f4e9c7, 5aea550, ed613af, 02cf9fd); dieser Bericht kommt als eigener Commit dazu
+- Commits: f4361ab (letzter Code-Commit; davor 7af40bb, 6f4e9c7, 5aea550, ed613af, 02cf9fd), a5db56f und folgende = dieser Bericht
 - PR: https://github.com/erqf1/sysline/pull/1 (Sysline 1.0.0 -> main), noch nicht gemergt
-- Release-Tag: v1.0.0 lokal angelegt, Push abgelehnt (403). Auf GitHub gibt es KEINEN Tag und KEIN Release.
+- Release-Tag: v1.0.0 lokal angelegt, Push zweimal versucht, beide Male vom Cloud-Proxy abgelehnt (HTTP 403, Richtlinie: nur der Arbeits-Branch darf gepusht werden). Den Release-Workflow per Hand zu starten ging auch nicht (404, weil release.yml noch nicht auf main liegt). Auf GitHub gibt es KEINEN Tag und KEIN Release.
 - CI (ci.yml, Build + Selbsttest offscreen): grün auf Windows, Linux und macOS (Push-Läufe 6f4e9c7, 7af40bb, f4361ab). Ein PR-Lauf hatte Linux rot, nur weil die Ubuntu-Paketquelle des GitHub-Runners nicht erreichbar war (Zeitüberschreitung bei apt); nach dem Neustart grün. Damit sind alle CI-Jobs grün.
 - Paket-Probelauf (release.yml beim PR): alle Jobs grün, 7 Pakete gebaut: Sysline-windows-x64-setup.exe, Sysline-windows-x64.zip, sysline_amd64.deb, sysline-linux-x86_64.tar.gz, sysline-x86_64.pkg.tar.zst, Sysline-macos-apple-silicon.dmg, Sysline-macos-intel.dmg. Der Schritt „release“ wurde übersprungen (kein Tag).
 
