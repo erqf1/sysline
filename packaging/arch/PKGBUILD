@@ -1,0 +1,26 @@
+# Maintainer: W Software
+pkgname=sysline
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="Game overlay (FPS, load, temperatures, ping) plus key remapping and macros"
+arch=('x86_64')
+url="https://github.com/erqf1/sysline"
+license=('Apache-2.0')
+depends=('qt6-base' 'libx11' 'iputils')
+makedepends=('cmake' 'ninja')
+options=('!debug')
+# CI packt den Quellbaum als sysline-src.tar.gz
+source=("sysline-src.tar.gz")
+sha256sums=('SKIP')
+
+build() {
+  cd "$srcdir"
+  cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
+  cmake --build build
+}
+
+package() {
+  cd "$srcdir"
+  DESTDIR="$pkgdir" cmake --install build
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="de" data-acryl="rose">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#07080c">
+<title>Sysline – Changelog</title>
+<link rel="icon" href="icon.png">
+<!-- Absichtlich ohne fremde Server: nur Systemschriften -->
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #07080c; --surface: rgb(255 255 255 / .04); --line: rgb(255 255 255 / .1);
+    --text: #f1f3f8; --muted: #b3bbcb; --faint: #939cb0; --grid: rgb(255 255 255 / .085);
+    --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--bg); }
+  body { margin: 0; min-height: 100vh; position: relative; isolation: isolate; background: var(--bg); color: var(--text); font: 16px/1.6 var(--font); -webkit-font-smoothing: antialiased; }
+  .bg { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+  .bg::before {
+    content: ""; position: absolute; inset: 0;
+    background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 44px 44px; background-position: center top;
+    -webkit-mask-image: radial-gradient(ellipse 85% 60% at 50% 0%, #000 35%, transparent 80%);
+            mask-image: radial-gradient(ellipse 85% 60% at 50% 0%, #000 35%, transparent 80%);
+  }
+  .blob { position: absolute; width: 46vmax; height: 46vmax; border-radius: 50%; filter: blur(80px); opacity: .2; }
+  .blob.a { background: #d61f45; top: -26vmax; left: -12vmax; }
+  .blob.b { background: #9b1030; top: -22vmax; right: -16vmax; }
+  main { max-width: 760px; margin: 0 auto; padding: 22px 20px 60px; }
+  header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .back { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--text); text-decoration: none; font-weight: 650; }
+  .back svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+  :focus-visible { outline: 3px solid #fb7185; outline-offset: 3px; }
+  h1 { margin: 44px 0 6px; font-size: clamp(2.2rem, 7vw, 3.2rem); letter-spacing: -.03em; line-height: 1.05; }
+  h1 span { background: linear-gradient(100deg, #fb7185, #d61f45 45%, #9b1030); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .lead { margin: 0 0 34px; color: var(--muted); }
+  .update { position: relative; padding: 0 0 34px 28px; border-left: 2px solid var(--line); margin-left: 8px; }
+  .update::before { content: ""; position: absolute; left: -8px; top: 6px; width: 14px; height: 14px; border-radius: 50%; background: #d61f45; box-shadow: 0 0 0 4px rgb(214 31 69 / .2); }
+  .update.new::before { background: #fb7185; box-shadow: 0 0 0 4px rgb(251 113 133 / .25), 0 0 18px #fb7185; }
+  .date { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 0 0 4px; font-size: .82rem; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); }
+  .badge { padding: 2px 9px; border-radius: 999px; background: rgb(214 31 69 / .18); color: #fb7185; font-size: .72rem; letter-spacing: .06em; }
+  h2 { margin: 0 0 14px; font-size: 1.35rem; letter-spacing: -.01em; }
+  .card { padding: 16px 18px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); margin-bottom: 12px; }
+  .card h3 { display: flex; align-items: center; gap: 8px; margin: 0 0 8px; font-size: .95rem; }
+  .card h3 i { width: 10px; height: 10px; border-radius: 3px; background: var(--c, #6f9bff); }
+  ul { margin: 0; padding-left: 20px; color: var(--muted); }
+  li { margin: 4px 0; }
+  li b { color: var(--text); font-weight: 650; }
+  footer { margin-top: 20px; color: var(--faint); font-size: .88rem; text-align: center; }
+</style>
+<link rel="stylesheet" href="/app-icons/acryl.css">
+<link rel="stylesheet" href="/app-icons/mobile.css">
+</head>
+<body>
+<div class="bg" aria-hidden="true"><div class="blob a"></div><div class="blob b"></div></div>
+<main>
+  <header>
+    <a class="back" href="/sys/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>Sysline</a>
+  </header>
+  <h1><span>Sysline</span> – Changelog</h1>
+  <p class="lead">Was es Neues bei Sysline gibt – das Neueste steht oben.</p>
+
+  <section class="update new">
+    <p class="date">19. November 2026 <span class="badge">Neu</span></p>
+    <h2>Version 1.0.0 – Das erste Release</h2>
+    <div class="card" style="--c:#d61f45">
+      <h3><i></i>Overlay</h3>
+      <ul>
+        <li><b>Immer vorne und durchklickbar:</b> FPS, CPU- und GPU-Last, RAM, VRAM, GPU-Temperatur, Ping, Uhrzeit und Akku in einer Ecke deiner Wahl.</li>
+        <li><b>Einstellbar:</b> Ecke, Größe von 70 bis 200 %, Deckkraft des Hintergrunds, Liste oder eine Zeile, Bildschirm.</li>
+        <li><b>Eine Taste:</b> Strg+Umschalt+O blendet das Overlay ein und aus, die Taste lässt sich ändern.</li>
+        <li><b>Bildrate (Windows):</b> gezählt wie bei PresentMon. Ohne Adminrechte steht ehrlich „Adminrechte nötig“ da; ein Klick erlaubt es dauerhaft über die Gruppe „Leistungsprotokollbenutzer“.</li>
+        <li><b>GPU-Temperatur</b> direkt vom Treiber: AMD über ADL (mit Hotspot), NVIDIA über NVML. Die CPU-Temperatur gibt es unter Linux; unter Windows bräuchte sie einen Kernel-Treiber, deshalb fehlt sie dort.</li>
+        <li><b>Ping</b> zu einem Server deiner Wahl (Standard: mert.win).</li>
+        <li><b>In Screenshots und Streams ausblenden</b> (Windows, auf Wunsch).</li>
+      </ul>
+    </div>
+    <div class="card" style="--c:#fb7185">
+      <h3><i></i>Tasten und Makros (Windows)</h3>
+      <ul>
+        <li><b>Tasten umbelegen:</b> eine Taste wird zu einer anderen oder zu einer Kombination wie Strg+Umschalt+S, oder sie wird abgeschaltet.</li>
+        <li><b>Makros:</b> Tastenfolgen mit Pausen aufnehmen oder Zeile für Zeile schreiben; einmal, mehrmals oder solange die Taste gedrückt ist.</li>
+        <li><b>Makros sind ab Werk aus,</b> mit deutlichem Hinweis: Viele Online-Spiele verbieten sie, Anti-Cheat kann sie erkennen.</li>
+        <li><b>Profile pro Spiel:</b> Sysline erkennt das Programm im Vordergrund und wechselt von selbst.</li>
+      </ul>
+    </div>
+    <div class="card" style="--c:#9b1030">
+      <h3><i></i>Bedienung</h3>
+      <ul>
+        <li><b>Tray-Symbol</b> mit Overlay, Umbelegen und Profilwahl, <b>Autostart</b>, automatische <b>Updates</b>.</li>
+        <li><b>Deutsch und Englisch,</b> hell und dunkel, eigene Akzentfarbe und die Stile Standard, Minimal und Acryl.</li>
+        <li><b>Linux und macOS:</b> Overlay und Werte laufen; Umbelegen, Makros und die Bildrate gibt es dort nicht.</li>
+      </ul>
+    </div>
+  </section>
+
+
+  <footer>mert.win</footer>
+</main>
+</body>
+</html>
