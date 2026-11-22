@@ -1,6 +1,6 @@
 # Maintainer: W Software
 pkgname=sysline
-pkgver=1.0.0
+pkgver=1.0.1
 pkgrel=1
 pkgdesc="Game overlay (FPS, load, temperatures, ping) plus key remapping and macros"
 arch=('x86_64')

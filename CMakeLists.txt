@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.21)
-project(Sysline VERSION 1.0.0 LANGUAGES C CXX)
+project(Sysline VERSION 1.0.1 LANGUAGES C CXX)
 if(WIN32)
     enable_language(RC)
 endif()
